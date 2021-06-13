@@ -8,20 +8,41 @@
         <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form id="ngForm">
+        <form id="ngForm" [formGroup]="noteForm" (ngSubmit)="onSubmitNote()">
           <div class="mb-3">
             <label for="title" class="form-label">Title</label>
-            <input type="text" class="form-control shadow-none" id="title">
+            <input type="text" class="form-control shadow-none" id="title" formControlName="title"
+              [ngClass]="{'is-invalid': !noteForm.get('title')?.valid && noteForm.get('title')?.touched}">
+            <div *ngIf="!noteForm.get('title')?.valid && noteForm.get('title')?.touched" class="invalid-feedback">
+              <div *ngIf="noteForm.get('title')?.errors && noteForm.get('title')?.errors?.required">
+                *This field is required.
+              </div>
+              <div *ngIf="noteForm.get('title')?.errors && noteForm.get('title')?.errors?.minlength">
+                *Please enter minimum {{noteForm.get('title')?.errors?.minlength?.requiredLength}} characters. You
+                entered {{noteForm.get('title')?.errors?.minlength?.actualLength}} characters.
+              </div>
+            </div>
           </div>
           <div class="mb-3">
             <label for="content" class="form-label">Content</label>
-            <textarea class="form-control shadow-none" id="content" rows="3"></textarea>
+            <textarea class="form-control shadow-none" id="content" rows="3" formControlName="content"
+              [ngClass]="{'is-invalid': !noteForm.get('content')?.valid && noteForm.get('content')?.touched}"></textarea>
+            <div *ngIf="!noteForm.get('content')?.valid && noteForm.get('content')?.touched" class="invalid-feedback">
+              <div *ngIf="noteForm.get('content')?.errors && noteForm.get('content')?.errors?.required">
+                *This field is required.
+              </div>
+              <div *ngIf="noteForm.get('content')?.errors && noteForm.get('content')?.errors?.minlength">
+                *Please enter minimum {{noteForm.get('content')?.errors?.minlength?.requiredLength}} characters. You
+                entered {{noteForm.get('content')?.errors?.minlength?.actualLength}} characters.
+              </div>
+            </div>
           </div>
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary shadow-none" data-bs-dismiss="modal">Close</button>
-        <button type="button" form="ngForm" class="btn btn-primary shadow-none">{{featureSelected}}</button>
+        <button type="submit" form="ngForm" class="btn btn-primary shadow-none"
+          [disabled]="!noteForm.valid">{{featureSelected}}</button>
       </div>
     </div>
   </div>
