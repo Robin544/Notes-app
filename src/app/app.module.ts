@@ -8,6 +8,8 @@ import { SignupComponent } from './signup/signup.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ErrorPageComponent } from './error-page/error-page.component';
 import { ShortenPipe } from './pipes/shorten.pipe';
+import { NoteModalComponent } from './shared/note-modal/note-modal.component';
+import { ConfirmationModalComponent } from './shared/confirmation-modal/confirmation-modal.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +18,9 @@ import { ShortenPipe } from './pipes/shorten.pipe';
     SignupComponent,
     DashboardComponent,
     ErrorPageComponent,
-    ShortenPipe
+    ShortenPipe,
+    NoteModalComponent,
+    ConfirmationModalComponent
   ],
   imports: [
     BrowserModule,

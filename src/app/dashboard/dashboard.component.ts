@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NotesModule } from '../models/notes/notes.module';
+import { NotesModule } from '../models/notes.module';
 
 @Component({
   selector: 'app-dashboard',
@@ -7,6 +7,8 @@ import { NotesModule } from '../models/notes/notes.module';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
+  actionType: string = "Add";
+
   notes: NotesModule[] = [
     new NotesModule("Note 1", "Notes is a notetaking app developed by Apple. It is provided on their iOS and macOS operating systems, the latter starting with OS X 10.8 Mountain Lion. It functions as a service for making short text notes, which can be synchronised between devices using Apple's iCloud service."),
     new NotesModule("Note 2", "Notes is a notetaking app developed by Apple. It is provided on their iOS and macOS operating systems, the latter starting with OS X 10.8 Mountain Lion. It functions as a service for making short text notes, which can be synchronised between devices using Apple's iCloud service."),
@@ -30,4 +32,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  setActionType(_actionType: string) {
+    this.actionType = _actionType;
+  }
 }
