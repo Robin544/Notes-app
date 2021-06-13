@@ -1,16 +1,50 @@
 <div class="signup mt-2">
   <div class="row">
     <div class="col-md-5">
-      <form>
+      <form (ngSubmit)="f.form.valid && onSignup(f)" #f="ngForm">
         <div class="mb-3">
-          <label for="exampleInputEmail1" class="form-label">Email address</label>
-          <input type="email" class="form-control shadow-none" id="exampleInputEmail1" aria-describedby="emailHelp">
+          <label for="email" class="form-label">Email address</label>
+          <input
+           type="text"
+           class="form-control shadow-none"
+           id="email"
+           name="email"
+           ngModel
+           email
+           required
+           #email="ngModel"
+           [ngClass]="{'is-invalid': !email.valid && email.touched}">
+           <div *ngIf="!email.valid && email.touched" class="invalid-feedback">
+            <div *ngIf="email.errors && email.errors.required">
+                *This field is required.
+            </div>
+            <div *ngIf="email.errors && email.errors.email">
+              *Please enter a valid email.
+            </div>
+          </div>
         </div>
         <div class="mb-3">
-          <label for="exampleInputPassword1" class="form-label">Password</label>
-          <input type="password" class="form-control shadow-none" id="exampleInputPassword1">
+          <label for="password" class="form-label">Password</label>
+          <input
+          type="password"
+           class="form-control shadow-none"
+           id="password"
+           name="password"
+           required
+           ngModel
+           #password="ngModel"
+           minlength="6"
+           [ngClass]="{'is-invalid': !password.valid && password.touched}">
+           <div *ngIf="!password.valid && password.touched" class="invalid-feedback">
+            <div *ngIf="password.errors && password.errors.required">
+                *This field is required.
+            </div>
+            <div *ngIf="password.errors && password.errors.minlength">
+             *Please enter minimum {{password.errors.minlength.requiredLength}} characters. You entered {{password.errors.minlength.actualLength}} characters.
+          </div>
+          </div>
         </div>
-        <button type="submit" class="btn btn-primary shadow-none">SignUp</button>
+        <button type="submit" class="btn btn-primary shadow-none" [disabled]="!f.valid">SignUp</button>
       </form>
     </div>
   </div>
