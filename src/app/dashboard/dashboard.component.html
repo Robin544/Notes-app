@@ -1,6 +1,6 @@
 <div class="dashboard-parent">
   <button class="btn btn-primary shadow-none" data-bs-toggle="modal" data-bs-target="#noteModal"
-    (click)="setActionType('Add')">Add Note</button>
+    (click)="setActionType('Add', -1)">Add Note</button>
   <div class="dashboard mt-2 d-flex" style="flex-wrap: wrap;">
     <div class="card" style="width: 32%; margin: 5px;" *ngFor="let note of notes; let i = index">
       <div class="card-body">
@@ -9,9 +9,9 @@
           {{note.content | shorten:150}}
         </p>
         <button class="btn btn-primary shadow-none" data-bs-toggle="modal" data-bs-target="#noteModal"
-          style="margin-right: 5px; width: 74px;" (click)="setActionType('Update')">Edit</button>
+          style="margin-right: 5px; width: 74px;" (click)="setActionType('Update', i)">Edit</button>
         <button class="btn btn-danger shadow-none" data-bs-toggle="modal" data-bs-target="#confirmationModal"
-          style="width: 74px;">Delete</button>
+          style="width: 74px;" (click)="onDeleteNote(i)">Delete</button>
       </div>
     </div>
   </div>

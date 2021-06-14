@@ -5,7 +5,8 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title" id="noteModalLabel">{{featureSelected}} Note</h4>
-        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"
+          #closebutton></button>
       </div>
       <div class="modal-body">
         <form id="ngForm" [formGroup]="noteForm" (ngSubmit)="onSubmitNote()">
