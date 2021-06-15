@@ -7,7 +7,11 @@ export class LoggingService {
 
   constructor() { }
 
-  consoleInfo(msg: string) {
-    console.info(msg);
+  consoleInfo(msg: string, data?: any) {
+    if (data) {
+      console.info(msg, data);
+    } else {
+      console.info(msg);
+    }
   }
 }
