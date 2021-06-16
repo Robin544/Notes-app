@@ -9,6 +9,7 @@
           #closebutton></button>
       </div>
       <div class="modal-body">
+        <p *ngIf="errorMessage">{{errorMessage}}</p>
         <form id="ngForm" [formGroup]="noteForm" (ngSubmit)="onSubmitNote()">
           <div class="mb-3">
             <label for="title" class="form-label">Title</label>
@@ -43,7 +44,7 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary shadow-none" data-bs-dismiss="modal">Close</button>
         <button type="submit" form="ngForm" class="btn btn-primary shadow-none"
-          [disabled]="!noteForm.valid">{{featureSelected}}</button>
+          [disabled]="!noteForm.valid || disabled">{{featureSelected}}</button>
       </div>
     </div>
   </div>

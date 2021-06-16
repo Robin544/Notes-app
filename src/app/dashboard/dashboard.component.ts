@@ -1,6 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { NotesModule } from '../models/notes.module';
+import { Component, OnInit } from '@angular/core';
+import { Note } from '../models/note.model';
 import { NotesService } from '../services/notes.service';
 
 @Component({
@@ -8,33 +7,42 @@ import { NotesService } from '../services/notes.service';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit, OnDestroy {
+export class DashboardComponent implements OnInit {
   actionType: string = "Add";
 
-  notes: NotesModule[] = [];
-  subscription!: Subscription;
+  notes: Note[] = [];
+  isLoading: boolean = true;
+  errorMessage: string = "";
 
   constructor(private notesService: NotesService) { }
 
   ngOnInit(): void {
-    this.notes = this.notesService.getNotes();
-    this.subscription = this.notesService.notesArrayModified.subscribe((_notes: NotesModule[]) => {
-      this.notes = _notes;
-    })
+    this.fetchNotes();
   }
 
-  setActionType(_actionType: string, i?: number) {
+  fetchNotes = () => {
+    this.isLoading = true;
+
+    this.notesService.getNotes().subscribe(
+      _notes => {
+        this.notes = _notes;
+        this.isLoading = false;
+      },
+      err => {
+        this.errorMessage = err.message;
+        this.isLoading = false;
+      }
+    )
+  }
+
+  setActionType(_actionType: string, id?: string) {
     this.actionType = _actionType;
-    if (i !== -1) {
-      this.notesService.startedEditing.next(i);
+    if (id) {
+      this.notesService.startedEditing.next(id);
     }
   }
 
-  onDeleteNote(index: number) {
-    this.notesService.startedEditing.next(index);
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+  onDeleteNote(id: string) {
+    this.notesService.startedEditing.next(id);
   }
 }

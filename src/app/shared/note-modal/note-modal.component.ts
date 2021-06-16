@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { NotesModule } from '../../models/notes.module';
+import { Note } from '../../models/note.model';
 import { NotesService } from '../../services/notes.service';
 
 @Component({
@@ -14,8 +14,10 @@ export class NoteModalComponent implements OnInit, OnDestroy {
   @Input() featureSelected: string = "";
   noteForm!: FormGroup;
   subscription!: Subscription;
-  noteIndex!: number;
-  editedNote!: NotesModule;
+  noteId!: string;
+  editedNote!: Note;
+  errorMessage: string = "";
+  disabled: boolean = false;
 
   constructor(private notesService: NotesService) { }
 
@@ -25,32 +27,54 @@ export class NoteModalComponent implements OnInit, OnDestroy {
       "content": new FormControl(null, [Validators.required, Validators.minLength(20)])
     })
 
-    this.subscription = this.notesService.startedEditing.subscribe((index: number) => {
-      if (index !== -1 && index !== undefined) {
-        this.noteIndex = index;
-        this.editedNote = this.notesService.getNote(index);
-
-        this.noteForm.setValue({
-          title: this.editedNote.title,
-          content: this.editedNote.content
-        })
+    this.subscription = this.notesService.startedEditing.subscribe((id: string) => {
+      if (id) {
+        this.noteId = id;
+        this.notesService.getNote(id).subscribe(
+          note => {
+            this.errorMessage = "";
+            this.noteForm.setValue({
+              title: note.title,
+              content: note.content
+            });
+          },
+          error => { this.errorMessage = error.message; }
+        );
       }
     });
   }
 
   onSubmitNote() {
-    let values: NotesModule = this.noteForm.value;
-    if (this.noteIndex !== -1 && this.noteIndex !== undefined) {
-      this.notesService.updateNote(this.noteIndex, values);
+    let values: Note = this.noteForm.value;
+    this.disabled = true;
+    if (this.noteId) {
+      this.notesService.updateNote(this.noteId, values).subscribe(
+        note => {
+          this.noteForm.reset();
+          this.errorMessage = "";
+          this.closebutton.nativeElement.click();
+        },
+        error => {
+          this.disabled = false;
+          this.errorMessage = error.message;
+        }
+      );
     } else {
-      this.notesService.addNote(values);
+      this.notesService.addNote(values).subscribe(
+        note => {
+          this.noteForm.reset();
+          this.errorMessage = "";
+          this.closebutton.nativeElement.click();
+        },
+        error => {
+          this.disabled = false;
+          this.errorMessage = error.message;
+        }
+      );
     }
-    this.noteForm.reset();
-    this.noteIndex = -1;
-    this.closebutton.nativeElement.click();
   }
 
-  ngOnDestroy(): void {
+  ngOnDestroy() {
     this.subscription.unsubscribe();
   }
 }

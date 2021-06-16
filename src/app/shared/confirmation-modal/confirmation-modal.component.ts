@@ -9,20 +9,28 @@ import { NotesService } from '../../services/notes.service';
 })
 export class ConfirmationModalComponent implements OnInit {
   @ViewChild('closebutton') closebutton: any;
-  noteIndex!: number;
-  subscription!: Subscription
+  noteId!: string;
+  subscription!: Subscription;
+  errorMessage: string = "";
 
   constructor(private notesService: NotesService) { }
 
   ngOnInit(): void {
-    this.subscription = this.notesService.startedEditing.subscribe((index: number) => {
-      this.noteIndex = index;
+    this.subscription = this.notesService.startedEditing.subscribe((id: string) => {
+      this.noteId = id;
     });
   }
 
   onDelete() {
-    this.notesService.deleteNote(this.noteIndex);
-    this.noteIndex = -1;
-    this.closebutton.nativeElement.click();
+    this.notesService.deleteNote(this.noteId).subscribe(
+      () => {
+        this.noteId = "";
+        this.errorMessage = "";
+        this.closebutton.nativeElement.click();
+      },
+      err => {
+        this.errorMessage = err.message;
+      }
+    );
   }
 }

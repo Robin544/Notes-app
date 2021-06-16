@@ -14,4 +14,8 @@ export class LoggingService {
       console.info(msg);
     }
   }
+
+  consoleError(err: any) {
+    console.error(err);
+  }
 }
