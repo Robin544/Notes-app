@@ -16,10 +16,7 @@ export class DashboardComponent implements OnInit, DoCheck {
   errorMessage: string = "";
   noteSub = Subscription;
 
-  constructor(private notesService: NotesService) {
-    console.log("constructor");
-
-  }
+  constructor(private notesService: NotesService) { }
 
   ngOnInit(): void {
     this.fetchNotes();
