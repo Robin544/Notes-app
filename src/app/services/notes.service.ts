@@ -12,13 +12,25 @@ export class NotesService {
   notes: Note[] = [];
   firebaseURL: string = "https://notes-app-dcb8c-default-rtdb.firebaseio.com/";
 
-  notesArrayModified = new Subject<Note[]>();
+  onNotesChange = new Subject<boolean>();
+  isNoteChanged: boolean = false;
   startedEditing = new Subject<string>();
 
   constructor(
     private loggingService: LoggingService,
     private http: HttpClient
-  ) { }
+  ) {
+    this.onNotesChange.subscribe(bool => this.isNoteChanged = bool);
+  }
+
+  onStatusChange(val: boolean) {
+    return this.onNotesChange.next(val);
+  }
+
+  changeStatus(val: boolean) {
+    this.isNoteChanged = val;
+    return this.isNoteChanged;
+  }
 
   addNote(note: Note) {
     return this.http

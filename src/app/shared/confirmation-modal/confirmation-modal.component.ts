@@ -26,6 +26,7 @@ export class ConfirmationModalComponent implements OnInit {
       () => {
         this.noteId = "";
         this.errorMessage = "";
+        this.notesService.onStatusChange(true);
         this.closebutton.nativeElement.click();
       },
       err => {

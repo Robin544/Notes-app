@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { Note } from '../models/note.model';
 import { NotesService } from '../services/notes.service';
 
@@ -7,17 +8,28 @@ import { NotesService } from '../services/notes.service';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, DoCheck {
   actionType: string = "Add";
 
   notes: Note[] = [];
   isLoading: boolean = true;
   errorMessage: string = "";
+  noteSub = Subscription;
 
-  constructor(private notesService: NotesService) { }
+  constructor(private notesService: NotesService) {
+    console.log("constructor");
+
+  }
 
   ngOnInit(): void {
     this.fetchNotes();
+  }
+
+  ngDoCheck() {
+    if (this.notesService.isNoteChanged) {
+      this.notesService.changeStatus(false);
+      return this.fetchNotes();
+    }
   }
 
   fetchNotes = () => {

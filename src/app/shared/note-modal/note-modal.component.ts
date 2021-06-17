@@ -28,6 +28,7 @@ export class NoteModalComponent implements OnInit, OnDestroy {
     })
 
     this.subscription = this.notesService.startedEditing.subscribe((id: string) => {
+      this.noteForm.reset();
       if (id) {
         this.noteId = id;
         this.notesService.getNote(id).subscribe(
@@ -50,28 +51,36 @@ export class NoteModalComponent implements OnInit, OnDestroy {
     if (this.noteId) {
       this.notesService.updateNote(this.noteId, values).subscribe(
         note => {
-          this.noteForm.reset();
-          this.errorMessage = "";
-          this.closebutton.nativeElement.click();
+          this.reset();
+          this.notesService.onStatusChange(true);
         },
         error => {
-          this.disabled = false;
-          this.errorMessage = error.message;
+          this.setError(error);
         }
       );
     } else {
       this.notesService.addNote(values).subscribe(
         note => {
-          this.noteForm.reset();
-          this.errorMessage = "";
-          this.closebutton.nativeElement.click();
+          this.reset();
+          this.notesService.onStatusChange(true);
         },
         error => {
-          this.disabled = false;
-          this.errorMessage = error.message;
+          this.setError(error);
         }
       );
     }
+  }
+
+  reset() {
+    this.noteForm.reset();
+    this.errorMessage = "";
+    this.disabled = false;
+    this.closebutton.nativeElement.click();
+  }
+
+  setError(err: any) {
+    this.disabled = false;
+    this.errorMessage = err.message;
   }
 
   ngOnDestroy() {
